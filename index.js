@@ -14,4 +14,12 @@ wss.on("connection", ws => {
 	ws.on("close", () => {
 		target.close();
 	});
+
+	target.onmessage = data => {
+		ws.send(data);
+	};
+
+	target.onclose = () => {
+		ws.close();
+	};
 });
