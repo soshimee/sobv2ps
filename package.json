@@ -1,0 +1,15 @@
+{
+	"name": "sobv2ps",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "soshimee",
+	"license": "MIT",
+	"type": "module",
+	"dependencies": {
+		"http-proxy": "^1.18.1"
+	}
+}
