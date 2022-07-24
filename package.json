@@ -10,10 +10,10 @@
 	"author": "soshimee",
 	"license": "MIT",
 	"type": "module",
-	"dependencies": {
-		"http-proxy": "^1.18.1"
-	},
 	"engines": {
 		"node": "16"
+	},
+	"dependencies": {
+		"ws": "^8.8.1"
 	}
 }

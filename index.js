@@ -1,3 +1,17 @@
-import httpProxy from "http-proxy";
+import WebSocket, { WebSocketServer } from "ws";
 
-httpProxy.createServer({ target: "wss://ourworldofpixels.com", ws: true, secure: false }).listen(process.env.PORT);
+const wss = new WebSocketServer({
+	port: process.env.PORT
+});
+
+wss.on("connection", ws => {
+	const target = new WebSocket("wss://ourworldofpixels.com");
+
+	ws.on("message", data => {
+		target.send(data);
+	});
+
+	ws.on("close", () => {
+		target.close();
+	});
+});
