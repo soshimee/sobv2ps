@@ -1,25 +1,43 @@
+// import http from "http";
+// import httpProxy from "http-proxy";
+
+// const proxy = httpProxy.createProxy({
+// 	target: "wss://ourworldofpixels.com",
+// 	ws: true,
+// 	secure: false
+// });
+// const proxyServer = http.createServer((req, res) => {
+// 	proxy.web(req, res);
+// });
+// proxyServer.on("upgrade", (req, socket, head) => {
+// 	proxy.ws(req, socket, head);
+// });
+// proxyServer.listen(31823);
+
 import WebSocket, { WebSocketServer } from "ws";
 
-const wss = new WebSocketServer({
-	port: process.env.PORT
-});
+const wss = new WebSocketServer({ port: 31823 });
 
 wss.on("connection", ws => {
-	const target = new WebSocket("wss://ourworldofpixels.com");
+	const remote = new WebSocket("wss://ourworldofpixels.com");
 
-	ws.on("message", data => {
-		target.send(data);
-	});
-
-	ws.on("close", () => {
-		target.close();
-	});
-
-	target.onmessage = data => {
-		ws.send(data);
+	remote.onmessage = data => {
+		ws.send(data.data);
+		console.log(data.data);
 	};
 
-	target.onclose = () => {
+	remote.onclose = event => {
 		ws.close();
+		console.log(event);
+	};
+
+	ws.onmessage = data => {
+		remote.send(data.data);
+		console.log(data.data);
+	};
+
+	ws.onclose = event => {
+		remote.close();
+		console.log(event);
 	};
 });
