@@ -1,25 +1,13 @@
-// import http from "http";
-// import httpProxy from "http-proxy";
-
-// const proxy = httpProxy.createProxy({
-// 	target: "wss://ourworldofpixels.com",
-// 	ws: true,
-// 	secure: false
-// });
-// const proxyServer = http.createServer((req, res) => {
-// 	proxy.web(req, res);
-// });
-// proxyServer.on("upgrade", (req, socket, head) => {
-// 	proxy.ws(req, socket, head);
-// });
-// proxyServer.listen(31823);
-
+import fs from "fs/promises";
 import WebSocket, { WebSocketServer } from "ws";
+import HttpsProxyAgent from "https-proxy-agent";
+
+const config = JSON.parse(await fs.readFile("config.json"));
 
 const wss = new WebSocketServer({ port: 31823 });
 
 wss.on("connection", ws => {
-	const remote = new WebSocket("wss://ourworldofpixels.com");
+	const remote = new WebSocket("wss://ourworldofpixels.com", { agent: config.proxy ? new HttpsProxyAgent(config.proxy) : undefined });
 
 	remote.onmessage = data => {
 		ws.send(data.data);
@@ -40,4 +28,8 @@ wss.on("connection", ws => {
 		remote.close();
 		console.log(event);
 	};
+
+	remote.onerror = () => {
+		console.log("ERROR!");
+	}
 });
