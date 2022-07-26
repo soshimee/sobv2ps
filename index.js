@@ -1,13 +1,13 @@
 import fs from "fs/promises";
 import WebSocket, { WebSocketServer } from "ws";
-import HttpsProxyAgent from "https-proxy-agent";
+import ProxyAgent from "proxy-agent";
 
 const config = JSON.parse(await fs.readFile("config.json"));
 
 const wss = new WebSocketServer({ port: 31823 });
 
 wss.on("connection", ws => {
-	const remote = new WebSocket("wss://ourworldofpixels.com", { agent: config.proxy ? new HttpsProxyAgent(config.proxy) : undefined });
+	const remote = new WebSocket("wss://ourworldofpixels.com", { agent: config.proxy ? new ProxyAgent(config.proxy) : undefined });
 
 	remote.onmessage = data => {
 		ws.send(data.data);
